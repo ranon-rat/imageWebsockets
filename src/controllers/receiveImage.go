@@ -1,16 +1,20 @@
 package controllers
 
-import "github.com/gorilla/websocket"
+import (
+	"log"
+
+	"github.com/gorilla/websocket"
+)
 
 func receiveImage(ws *websocket.Conn) {
 	for {
-		messageType, image, err := ws.ReadMessage()
-		if err != nil {
-			ws.Close()
-			delete(clients, ws)
-			return
+		var message Message
+		if err := ws.ReadJSON(&message); err != nil {
+			log.Println(err)
+			break
 		}
-		messageChan <- Message{image, messageType}
+		message.client = ws
+		messageChan <- message
 
 	}
 }

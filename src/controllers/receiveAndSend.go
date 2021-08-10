@@ -9,7 +9,7 @@ func DrawWebsockets(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 	clients[ws] = true
-	go sendImage()
-	receiveImage(ws)
+	go receiveImage(ws)
+	sendImage(ws)
 
 }

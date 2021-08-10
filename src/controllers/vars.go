@@ -9,6 +9,6 @@ var (
 )
 
 type Message struct {
-	Content     []byte
-	MessageType int
+	Content string `json:"content"`
+	client  *websocket.Conn
 }

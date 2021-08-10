@@ -1,13 +1,23 @@
 package controllers
 
-func sendImage() {
+import (
+	"log"
+
+	"github.com/gorilla/websocket"
+)
+
+func sendImage(ws *websocket.Conn) {
 	for {
 		message := <-messageChan
 		for client := range clients {
-			if err := client.WriteMessage(message.MessageType, message.Content); err != nil {
-				client.Close()
-				delete(clients, client)
+			if client != message.client {
+				log.Println(client.RemoteAddr())
+				log.Println(len(clients))
+				if err := client.WriteJSON(message); err != nil {
+					log.Println(err)
+					delete(clients, client)
 
+				}
 			}
 		}
 	}
